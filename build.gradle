@@ -1,5 +1,3 @@
-import org.gradle.util.GradleVersion
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 buildscript {
@@ -34,80 +32,11 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        'name.remal.template-plugin' {
-            id = 'name.remal.template-plugin'
+        'name.remal.build-time-constants-jvm' {
+            id = 'name.remal.build-time-constants-jvm'
             implementationClass = 'name.remal.gradle_plugins.template.TemplatePlugin'
-            displayName = 'Template plugin'
+            displayName = 'Plugin'
             description = property('repository-description')
         }
-    }
-}
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/* TODO: REMOVE THIS SECTION FOR REAL PLUGIN                                 */
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-if (project.isRunningOnCi) {
-    TaskProvider validateRepositoryProperties = tasks.register('validateRepositoryProperties') {
-        outputs.upToDateWhen { false }
-
-        doLast {
-            String rootProjectName = project.rootProject.name
-            String repositoryName = project.ext['repository-name']
-            if (rootProjectName != repositoryName) {
-                throw new GradleException("Root project name ('$rootProjectName') does NOT equal to the repository name: '$repositoryName'")
-            }
-        }
-    }
-
-    tasks.named('check').configure {
-        dependsOn(validateRepositoryProperties)
-    }
-
-
-    TaskProvider processGradleProperties = tasks.register('processGradleProperties') {
-        outputs.upToDateWhen { false }
-
-        doLast {
-            String repositoryName = project.ext['repository-name'] ?: ''
-            if (repositoryName.isEmpty()) {
-                throw new GradleException("`repository-name` property is empty")
-            }
-            if (repositoryName != 'template') {
-                throw new GradleException("This code should be executed for template repository only")
-            }
-
-            File file = project.file('gradle.properties')
-            Properties currentProperties = new Properties()
-            file.withReader('UTF-8') { currentProperties.load(it) }
-
-            String content = file.getText('UTF-8')
-            Map<String, String> handledProperties = [:]
-            content = content.replaceFirst(/((?:^|[\r\n]\s*)(gradle-api.min-version))\s*=\s*\d+\S*(\s|$)/) { List<String> groups ->
-                GradleVersion lastMinorVersion = project.getAllGradleVersions().findAll { GradleVersion ver ->
-                    ver == ver.baseVersion && ver.version.count('.') == 1
-                }[1]
-                String value = lastMinorVersion.version
-                handledProperties[groups[2]] = value
-                return "${groups[1]} = ${value}${groups[3]}"
-            }
-
-            handledProperties.entrySet().removeIf { entry ->
-                String currentValue = currentProperties.getProperty(entry.key)
-                return currentValue == entry.value
-            }
-
-            handledProperties.keySet().forEach { key ->
-                println "  Changing property: $key"
-            }
-
-            if (!handledProperties.isEmpty()) {
-                file.setText(content, 'UTF-8')
-            }
-        }
-    }
-
-    tasks.named('processReadme').configure {
-        dependsOn(processGradleProperties)
     }
 }
