@@ -53,7 +53,9 @@ jobs:
           PACKAGE="com.github.$PACKAGE_ACTOR.$PACKAGE_NAME"
         fi
         find src -type f -exec sed -i "s/name.remal.gradle_plugins.template/$PACKAGE/g" {} +
+        mkdir -p src/main/java/${PACKAGE//.//}
         cp -R src/main/java/name/remal/gradle_plugins/template/* src/main/java/${PACKAGE//.//}/
+        mkdir -p src/test/java/${PACKAGE//.//}
         cp -R src/test/java/name/remal/gradle_plugins/template/* src/test/java/${PACKAGE//.//}/
 
         sed -i "s/%NAME%/$NAME/g" .github/template-cleanup/*
