@@ -2,7 +2,7 @@ name: CodeQL Analysis
 
 on:
   schedule:
-  - cron: '10 20 * * *' # sync-with-template: adjust
+  - cron: '39 13 * * *' # sync-with-template: adjust
   workflow_dispatch: { }
 
 env:

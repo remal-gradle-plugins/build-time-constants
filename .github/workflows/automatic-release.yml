@@ -2,7 +2,7 @@ name: Automatic release
 
 on:
   schedule:
-  - cron: '4 10 * * 4' # sync-with-template: adjust
+  - cron: '33 3 * * 5' # sync-with-template: adjust
   workflow_dispatch: { }
 
 defaults:
