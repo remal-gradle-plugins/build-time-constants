@@ -1,0 +1,83 @@
+name: Template cleanup
+
+on:
+  push:
+    branches:
+    - main
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  template-cleanup:
+    name: Template cleanup
+    if: ${{github.repository != 'remal-gradle-plugins/template'}}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Cleanup
+      run: |
+        export LC_CTYPE=C
+        export LANG=C
+
+        NAME="${GITHUB_REPOSITORY##*/}"
+        ACTOR=$(echo $GITHUB_ACTOR | tr '[:upper:]' '[:lower:]')
+
+        if [ "${{github.repository_owner}}" == "remal-gradle-plugins" ]; then
+          GROUP_PREFIX="name.remal.gradle-plugins"
+        else
+          GROUP_PREFIX_ACTOR=$(echo $ACTOR | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          GROUP_PREFIX="com.github.$GROUP_PREFIX_ACTOR"
+        fi
+
+        ID_NAME=$(echo $NAME | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+        if [ "${{github.repository_owner}}" == "remal-gradle-plugins" ]; then
+          ID="name.remal.$ID_NAME"
+        else
+          ID_ACTOR=$(echo $ACTOR | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          ID="com.github.$ID_ACTOR.$ID_NAME"
+        fi
+
+        PACKAGE_NAME=$(echo $NAME | sed 's/[^a-zA-Z0-9]/_/g' | tr '[:upper:]' '[:lower:]')
+        if [ "${{github.repository_owner}}" == "remal-gradle-plugins" ]; then
+          PACKAGE="name.remal.gradle_plugins.$PACKAGE_NAME"
+        else
+          PACKAGE_ACTOR=$(echo $ACTOR | sed 's/[^a-zA-Z0-9]/_/g' | tr '[:upper:]' '[:lower:]')
+          PACKAGE="com.github.$PACKAGE_ACTOR.$PACKAGE_NAME"
+        fi
+        find src -type f -exec sed -i "s/name.remal.gradle_plugins.template/$PACKAGE/g" {} +
+        cp -R src/main/java/name/remal/gradle_plugins/template/* src/main/java/${PACKAGE//.//}/
+        cp -R src/test/java/name/remal/gradle_plugins/template/* src/test/java/${PACKAGE//.//}/
+
+        sed -i "s/%NAME%/$NAME/g" .github/template-cleanup/*
+        sed -i "s/%REPOSITORY%/${GITHUB_REPOSITORY/\//\\/}/g" .github/template-cleanup/*
+        sed -i "s/%GROUP_PREFIX%/$GROUP_PREFIX/g" .github/template-cleanup/*
+        sed -i "s/%ID_NAME%/$ID_NAME/g" .github/template-cleanup/*
+        sed -i "s/%ID%/$ID/g" .github/template-cleanup/*
+        cp -R .github/template-cleanup/. .
+
+        rm -rf \
+          .github/sync-with-template-local-transformations.yml \
+          .github/template-cleanup \
+          .github/workflows/template-cleanup.yml
+
+    - name: Push back
+      id: push-back
+      if: ${{github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')}}
+      uses: remal-github-actions/push-back@v1
+      with:
+        githubToken: ${{secrets.PUSH_BACK_TOKEN || github.token}}
+        message: 'Template cleanup'
+
+    - name: Fail if the repository was changed before pushing back
+      if: ${{steps.push-back.outputs.result == 'remote-changed'}}
+      run: |
+        echo "The repository was changed before pushing back"
+        exit 1
