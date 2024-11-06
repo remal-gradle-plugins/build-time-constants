@@ -34,8 +34,8 @@ gradlePlugin {
     plugins {
         'name.remal.build-time-constants-jvm' {
             id = 'name.remal.build-time-constants-jvm'
-            implementationClass = 'name.remal.gradle_plugins.template.TemplatePlugin'
-            displayName = 'Plugin'
+            implementationClass = 'name.remal.gradle_plugins.build_time_constants.jvm.BuildTimeConstantsJvmPlugin'
+            displayName = 'Insert compile-time constants into JVM class files'
             description = property('repository-description')
         }
     }
