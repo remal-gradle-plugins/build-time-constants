@@ -2,7 +2,7 @@ name: Bump repository activity
 
 on:
   schedule:
-  - cron: '1 20 * * *' # sync-with-template: adjust
+  - cron: '30 13 * * *' # sync-with-template: adjust
   push:
     branches:
     - main
