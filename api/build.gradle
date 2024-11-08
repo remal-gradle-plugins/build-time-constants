@@ -1,0 +1,11 @@
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+
+publishing.publications.withType(MavenPublication).configureEach {
+    pom {
+        withXml { xml ->
+            def root = xml.asNode()
+            root.dependencyManagement?.replaceNode {}
+        }
+    }
+}

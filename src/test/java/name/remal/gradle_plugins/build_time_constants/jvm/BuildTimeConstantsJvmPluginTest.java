@@ -3,6 +3,7 @@ package name.remal.gradle_plugins.build_time_constants.jvm;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import lombok.RequiredArgsConstructor;
+import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsBasePlugin;
 import org.gradle.api.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,8 @@ class BuildTimeConstantsJvmPluginTest {
     }
 
     @Test
-    void test() {
-        assertTrue(project.getPlugins().hasPlugin(BuildTimeConstantsJvmPlugin.class));
+    void basePluginIsApplied() {
+        assertTrue(project.getPlugins().hasPlugin(BuildTimeConstantsBasePlugin.class));
     }
 
 }
