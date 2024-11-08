@@ -2,3 +2,8 @@
 # Do not modify it yourself unless you know what you are doing.
 
 org.ow2.asm:asm-bom:9.7.1:@pom
+zzzz-classes-that-rely-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.internal._relocated.name.remal.gradle_plugins.toolkit.DebugUtils$1:835e99fa4fbd000d4be30c4e5e3982a1757db7ad24a4f4c31c59bdef4084c700
+zzzz-classes-that-rely-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.internal._relocated.name.remal.gradle_plugins.toolkit.DebugUtils$IfDebugEnabled:5a85cab240e71dc1a8e1143c7fc521bfc37bc9ea53bb1ce4de2822d835150662
+zzzz-classes-that-rely-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.internal._relocated.name.remal.gradle_plugins.toolkit.DebugUtils:1b175499ad05eface8a1173f020bda263451a031acf5920f79a1e1c434647072
+zzzz-classes-that-rely-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.internal._relocated.name.remal.gradle_plugins.toolkit.Version:e9d81982d320d091579eb098217cfa5e3af79c779d8bed8a873732f800146f24
+zzzz-classes-that-rely-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.internal._relocated.name.remal.gradle_plugins.toolkit.reflection.ReflectionUtils:50e851107f0212bbbbabff9a3c0d75e13f9adc414b38abc25d919874a28a4474
