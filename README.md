@@ -12,7 +12,7 @@ dependency to `compileOnly` configuration of every [`SourceSet`](https://docs.gr
 The version of the added dependency will be the same as the plugin version.
 
 You can use `name.remal.gradle_plugins.build_time_constants.api.BuildTimeConstants` class in any JVM-language statically compiled code.
-The plugin processes `*.class` files and inject build-time constants instead of `BuildTimeConstants` methods invocation.
+The plugin processes `*.class` files and injects build-time constants instead of `BuildTimeConstants` methods invocation.
 
 ## Using build-time properties
 
