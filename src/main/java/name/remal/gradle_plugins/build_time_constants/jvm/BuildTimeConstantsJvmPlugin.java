@@ -24,26 +24,20 @@ import org.gradle.api.tasks.compile.AbstractCompile;
 @CustomLog
 public abstract class BuildTimeConstantsJvmPlugin implements Plugin<Project> {
 
-    @Inject
-    protected abstract ObjectFactory getObjects();
-
-    @Inject
-    protected abstract ProviderFactory getProviders();
-
     @Override
     public void apply(Project project) {
         project.getPluginManager().apply(BuildTimeConstantsBasePlugin.class);
         withAnyOfPlugins(project.getPluginManager(), "java-base", __ -> {
             val sourceSets = project.getExtensions().getByType(SourceSetContainer.class);
             sourceSets.configureEach(sourceSet ->
-                project.getConfigurations().named(sourceSet.getCompileOnlyConfigurationName(), conf -> {
-                    conf.getDependencies().add(project.getDependencies().create(format(
-                        "%s:%s:%s",
-                        BUILD_TIME_CONSTANTS_API_GROUP,
-                        BUILD_TIME_CONSTANTS_API_ARTIFACT_ID,
-                        BUILD_TIME_CONSTANTS_API_VERSION
-                    )));
-                })
+                    project.getConfigurations().named(sourceSet.getCompileOnlyConfigurationName(), conf -> {
+                        conf.getDependencies().add(project.getDependencies().create(format(
+                                "%s:%s:%s",
+                                BUILD_TIME_CONSTANTS_API_GROUP,
+                                BUILD_TIME_CONSTANTS_API_ARTIFACT_ID,
+                                BUILD_TIME_CONSTANTS_API_VERSION
+                        )));
+                    })
             );
         });
 
@@ -73,12 +67,19 @@ public abstract class BuildTimeConstantsJvmPlugin implements Plugin<Project> {
 
         project.getTasks().withType(AbstractCompile.class).configureEach(task -> {
             task.getInputs().property(
-                BuildTimeConstantsExtension.class.getSimpleName() + ".properties",
-                properties
+                    BuildTimeConstantsExtension.class.getSimpleName() + ".properties",
+                    properties
             );
 
             task.doLast(processingAction);
         });
     }
+
+
+    @Inject
+    protected abstract ObjectFactory getObjects();
+
+    @Inject
+    protected abstract ProviderFactory getProviders();
 
 }
