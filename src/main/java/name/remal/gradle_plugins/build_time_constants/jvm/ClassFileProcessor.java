@@ -1,6 +1,8 @@
 package name.remal.gradle_plugins.build_time_constants.jvm;
 
+import static com.google.common.hash.Hashing.sha512;
 import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.write;
 import static name.remal.gradle_plugins.build_time_constants.jvm.WithCheckClassAdapter.withCheckClassAdapter;
@@ -8,7 +10,13 @@ import static name.remal.gradle_plugins.toolkit.InTestFlags.isInUnitTest;
 import static name.remal.gradle_plugins.toolkit.StringUtils.escapeRegex;
 import static name.remal.gradle_plugins.toolkit.StringUtils.substringAfterLast;
 import static name.remal.gradle_plugins.toolkit.StringUtils.substringBeforeLast;
+import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
 import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
+import static org.objectweb.asm.Opcodes.ACC_FINAL;
+import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
+import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
+import static org.objectweb.asm.Opcodes.ACC_STATIC;
+import static org.objectweb.asm.Opcodes.ACC_SYNTHETIC;
 import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.GETSTATIC;
@@ -20,12 +28,15 @@ import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.LCONST_0;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.POP;
+import static org.objectweb.asm.Opcodes.PUTSTATIC;
+import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Type.getDescriptor;
 
 import com.google.common.collect.ImmutableList;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,9 +54,11 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -55,6 +68,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 @RequiredArgsConstructor
 class ClassFileProcessor {
 
+    private static final boolean PUT_PROPERTY_MAPS_TO_FIELDS = true;
     private static final boolean IN_TEST = isInUnitTest();
 
     private final Path sourcePath;
@@ -64,6 +78,7 @@ class ClassFileProcessor {
     private boolean changed;
 
     @SneakyThrows
+    @SuppressWarnings("java:S3776")
     public void process() {
         val classNode = new ClassNode();
         ClassReader classReader;
@@ -80,10 +95,25 @@ class ClassFileProcessor {
             }
         }
 
+        if (classNode.fields == null) {
+            classNode.fields = new ArrayList<>();
+        }
+
+        if (classNode.methods == null) {
+            classNode.methods = new ArrayList<>();
+        }
+
+
         processClass(classNode);
 
+
         if (changed) {
-            val classWriter = new ClassWriter(COMPUTE_MAXS);
+            classNode.methods.forEach(methodNode -> {
+                methodNode.maxStack = 1;
+                methodNode.maxLocals = 1;
+            });
+
+            val classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
             ClassVisitor classVisitor = classWriter;
             if (IN_TEST) {
                 classVisitor = withCheckClassAdapter(classVisitor);
@@ -112,7 +142,7 @@ class ClassFileProcessor {
             return;
         }
 
-        classNode.methods.forEach(methodNode -> {
+        new ArrayList<>(classNode.methods).forEach(methodNode -> {
             val instructions = methodNode.instructions;
             if (instructions == null || instructions.size() == 0) {
                 return;
@@ -223,22 +253,34 @@ class ClassFileProcessor {
                         );
                         break;
                     case "getStringProperties":
-                        newInsns = createMapInsns(
+                        newInsns = createConstantMapInsns(
+                            classNode,
+                            methodInsn.name,
+                            ldcInsn.cst,
                             getPropertiesByNamePattern(ldcInsn.cst, String.class, String::valueOf)
                         );
                         break;
                     case "getIntegerProperties":
-                        newInsns = createMapInsns(
+                        newInsns = createConstantMapInsns(
+                            classNode,
+                            methodInsn.name,
+                            ldcInsn.cst,
                             getPropertiesByNamePattern(ldcInsn.cst, int.class, Integer::parseInt)
                         );
                         break;
                     case "getLongProperties":
-                        newInsns = createMapInsns(
+                        newInsns = createConstantMapInsns(
+                            classNode,
+                            methodInsn.name,
+                            ldcInsn.cst,
                             getPropertiesByNamePattern(ldcInsn.cst, long.class, Long::parseLong)
                         );
                         break;
                     case "getBooleanProperties":
-                        newInsns = createMapInsns(
+                        newInsns = createConstantMapInsns(
+                            classNode,
+                            methodInsn.name,
+                            ldcInsn.cst,
                             getPropertiesByNamePattern(ldcInsn.cst, boolean.class, Boolean::parseBoolean)
                         );
                         break;
@@ -425,6 +467,84 @@ class ClassFileProcessor {
         }
     }
 
+    private static List<AbstractInsnNode> createConstantMapInsns(
+        ClassNode classNode,
+        String scope,
+        Object value,
+        Map<?, ?> values
+    ) {
+        if (!PUT_PROPERTY_MAPS_TO_FIELDS
+            || (classNode.access & ACC_INTERFACE) != 0
+        ) {
+            return createMapInsns(values);
+        }
+
+        val valueHash = sha512().hashString(value.toString(), UTF_8).toString();
+        val fieldName = "$" + scope + "$" + valueHash;
+        FieldNode field = classNode.fields.stream()
+            .filter(it -> it.name.equals(fieldName))
+            .findAny()
+            .orElse(null);
+
+        if (field == null) {
+            field = new FieldNode(
+                ACC_PRIVATE | ACC_STATIC | ACC_FINAL | ACC_SYNTHETIC,
+                fieldName,
+                "Ljava/util/Map;",
+                null,
+                null
+            );
+            classNode.fields.add(field);
+
+            MethodNode staticInitMethod = classNode.methods.stream()
+                .filter(it -> it.name.equals("<clinit>") && it.desc.equals("()V"))
+                .findAny()
+                .orElse(null);
+            if (staticInitMethod == null) {
+                staticInitMethod = new MethodNode(
+                    ACC_STATIC,
+                    "<clinit>",
+                    "()V",
+                    null,
+                    null
+                );
+                classNode.methods.add(staticInitMethod);
+            }
+
+            InsnList instructions = staticInitMethod.instructions;
+            if (instructions == null) {
+                instructions = staticInitMethod.instructions = new InsnList();
+            }
+            if (instructions.size() == 0) {
+                instructions.add(new LabelNode());
+                instructions.add(new InsnNode(RETURN));
+            }
+
+            val insnsToAdd = new InsnList();
+            createMapInsns(values).forEach(insnsToAdd::add);
+            insnsToAdd.add(new FieldInsnNode(
+                PUTSTATIC,
+                classNode.name,
+                field.name,
+                field.desc
+            ));
+
+            val prevInsn = getFirstLabelNode(instructions);
+            if (prevInsn == null) {
+                instructions.insert(insnsToAdd);
+            } else {
+                instructions.insert(prevInsn, insnsToAdd);
+            }
+        }
+
+        return ImmutableList.of(new FieldInsnNode(
+            GETSTATIC,
+            classNode.name,
+            field.name,
+            field.desc
+        ));
+    }
+
     private static List<AbstractInsnNode> createMapInsns(Map<?, ?> values) {
         if (values.isEmpty()) {
             return ImmutableList.of(
@@ -495,6 +615,25 @@ class ClassFileProcessor {
         });
 
         return result;
+    }
+
+    @Nullable
+    private static LabelNode getFirstLabelNode(InsnList instructions) {
+        AbstractInsnNode insn = instructions.getFirst();
+        while (insn != null) {
+            if (insn instanceof LabelNode) {
+                return (LabelNode) insn;
+            }
+
+            if (insn instanceof LineNumberNode) {
+                insn = insn.getNext();
+                continue;
+            }
+
+            break;
+        }
+
+        return null;
     }
 
 }
