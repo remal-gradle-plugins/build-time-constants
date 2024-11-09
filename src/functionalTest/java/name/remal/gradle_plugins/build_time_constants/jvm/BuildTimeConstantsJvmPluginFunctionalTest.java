@@ -16,7 +16,7 @@ class BuildTimeConstantsJvmPluginFunctionalTest {
     @BeforeEach
     void beforeEach() {
         project.forBuildFile(build -> {
-            build.applyPlugin("name.remal.build-time-constants.jvm");
+            build.applyPlugin("name.remal.build-time-constants");
             build.applyPlugin("java");
             build.addBuildDirMavenRepositories();
         });
