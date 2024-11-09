@@ -83,7 +83,7 @@ class ClassFileProcessor {
         processClass(classNode);
 
         if (changed) {
-            val classWriter = new ClassWriter(classReader, COMPUTE_MAXS);
+            val classWriter = new ClassWriter(COMPUTE_MAXS);
             ClassVisitor classVisitor = classWriter;
             if (IN_TEST) {
                 classVisitor = withCheckClassAdapter(classVisitor);
