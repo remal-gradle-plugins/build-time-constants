@@ -5,7 +5,7 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.write;
-import static name.remal.gradle_plugins.build_time_constants.jvm.WithCheckClassAdapter.withCheckClassAdapter;
+import static name.remal.gradle_plugins.build_time_constants.jvm.BytecodeTestUtils.wrapWithTestClassVisitors;
 import static name.remal.gradle_plugins.toolkit.InTestFlags.isInUnitTest;
 import static name.remal.gradle_plugins.toolkit.StringUtils.escapeRegex;
 import static name.remal.gradle_plugins.toolkit.StringUtils.substringAfterLast;
@@ -116,7 +116,7 @@ class ClassFileProcessor {
             val classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
             ClassVisitor classVisitor = classWriter;
             if (IN_TEST) {
-                classVisitor = withCheckClassAdapter(classVisitor);
+                classVisitor = wrapWithTestClassVisitors(classVisitor);
             }
             classNode.accept(classVisitor);
             val bytecode = classWriter.toByteArray();

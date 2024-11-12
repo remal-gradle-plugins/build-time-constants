@@ -40,13 +40,11 @@ apply plugin: 'name.remal.generate-sources'
 
 dependencies {
     optional project(':api')
-
-    compileOnly 'org.ow2.asm:asm-util'
+    optional 'org.ow2.asm:asm-util'
 
     implementation 'org.ow2.asm:asm-tree'
 
 
-    testImplementation 'org.ow2.asm:asm-util'
     testImplementation 'com.google.jimfs:jimfs:1.3.0'
 }
 

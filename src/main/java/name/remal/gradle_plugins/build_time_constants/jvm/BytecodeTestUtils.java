@@ -13,12 +13,12 @@ import org.objectweb.asm.util.TraceClassVisitor;
  * {@link CheckClassAdapter} is an optional dependency, so it's usage should be in a separate class.
  */
 @NoArgsConstructor(access = PRIVATE)
-abstract class WithCheckClassAdapter {
+abstract class BytecodeTestUtils {
 
     private static final boolean TRACE = false;
 
     @SuppressWarnings({"java:S106", "DefaultCharset"})
-    public static ClassVisitor withCheckClassAdapter(ClassVisitor classVisitor) {
+    public static ClassVisitor wrapWithTestClassVisitors(ClassVisitor classVisitor) {
         if (TRACE) {
             val writer = new PrintWriter(System.out, true);
             classVisitor = new TraceClassVisitor(classVisitor, writer);
