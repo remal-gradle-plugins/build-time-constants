@@ -2,7 +2,7 @@
 
 **Tested on Gradle versions from <!--property:gradle-api.min-version-->6.7<!--/property--> to <!--property:gradle-api.max-version-->8.11.1<!--/property-->.**
 
-# `name.remal.build-time-constants.jvm` plugin
+# `name.remal.build-time-constants` plugin
 
 [![configuration cache: supported](https://img.shields.io/static/v1?label=configuration%20cache&message=supported&color=success)](https://docs.gradle.org/current/userguide/configuration_cache.html)
 
