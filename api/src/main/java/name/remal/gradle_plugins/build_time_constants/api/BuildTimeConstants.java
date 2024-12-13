@@ -153,7 +153,7 @@ public abstract class BuildTimeConstants {
 
     private static Error illegalMethodUseException() {
         throw new Error("This method can't be invoked directly."
-            + " Use `name.remal.build-time-constants.jvm` Gradle plugin to process the method invocation.");
+            + " Use `name.remal.build-time-constants` Gradle plugin to process the method invocation.");
     }
 
 
@@ -163,7 +163,7 @@ public abstract class BuildTimeConstants {
 
     private static void throwIllegalClassUseException() {
         throw new Error("This class can't be used directly."
-            + " Use `name.remal.build-time-constants.jvm` Gradle plugin to handle the class's methods.");
+            + " Use `name.remal.build-time-constants` Gradle plugin to handle the class's methods.");
     }
 
 }
