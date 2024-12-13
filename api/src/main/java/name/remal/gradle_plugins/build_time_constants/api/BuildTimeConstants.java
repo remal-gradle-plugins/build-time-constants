@@ -12,7 +12,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static String getClassName(@NotNull Class<?> clazz) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -22,7 +22,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static String getClassSimpleName(@NotNull Class<?> clazz) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -32,7 +32,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static String getClassPackageName(@NotNull Class<?> clazz) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static String getClassInternalName(@NotNull Class<?> clazz) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static String getClassDescriptor(@NotNull Class<?> clazz) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
 
@@ -63,7 +63,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static String getStringProperty(@NotNull String propertyName) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -72,7 +72,7 @@ public abstract class BuildTimeConstants {
      * <p><b>Property name parameter must be a constant expression.</b>
      */
     public static int getIntegerProperty(@NotNull String propertyName) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class BuildTimeConstants {
      * <p><b>Property name parameter must be a constant expression.</b>
      */
     public static long getLongProperty(@NotNull String propertyName) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -90,7 +90,7 @@ public abstract class BuildTimeConstants {
      * <p><b>Property name parameter must be a constant expression.</b>
      */
     public static boolean getBooleanProperty(@NotNull String propertyName) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
 
@@ -105,7 +105,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static Map<@NotNull String, @NotNull String> getStringProperties(@NotNull String propertyNamePattern) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -119,7 +119,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static Map<@NotNull String, @NotNull Integer> getIntegerProperties(@NotNull String propertyNamePattern) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -133,7 +133,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static Map<@NotNull String, @NotNull Long> getLongProperties(@NotNull String propertyNamePattern) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
     /**
@@ -147,11 +147,11 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     public static Map<@NotNull String, @NotNull Boolean> getBooleanProperties(@NotNull String propertyNamePattern) {
-        throw newIllegalMethodUseException();
+        throw illegalMethodUseException();
     }
 
 
-    private static Error newIllegalMethodUseException() {
+    private static Error illegalMethodUseException() {
         throw new Error("This method can't be invoked directly."
             + " Use `name.remal.build-time-constants.jvm` Gradle plugin to process the method invocation.");
     }
