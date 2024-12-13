@@ -15,6 +15,7 @@ import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsBasePlug
 import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsExtension;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.ExternalModuleDependency;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ProviderFactory;
 import org.gradle.api.tasks.SourceSetContainer;
@@ -30,12 +31,19 @@ public abstract class BuildTimeConstantsJvmPlugin implements Plugin<Project> {
             val sourceSets = project.getExtensions().getByType(SourceSetContainer.class);
             sourceSets.configureEach(sourceSet ->
                 project.getConfigurations().named(sourceSet.getCompileOnlyConfigurationName(), conf -> {
-                    conf.getDependencies().add(project.getDependencies().create(format(
+                    val dependencyNotation = format(
                         "%s:%s:%s",
                         BUILD_TIME_CONSTANTS_API_GROUP,
                         BUILD_TIME_CONSTANTS_API_ARTIFACT_ID,
                         BUILD_TIME_CONSTANTS_API_VERSION
-                    )));
+                    );
+                    val dependency = project.getDependencies().create(dependencyNotation);
+                    if (dependency instanceof ExternalModuleDependency) {
+                        ((ExternalModuleDependency) dependency).version(versions ->
+                            versions.strictly(BUILD_TIME_CONSTANTS_API_VERSION)
+                        );
+                    }
+                    conf.getDependencies().add(dependency);
                 })
             );
         });
