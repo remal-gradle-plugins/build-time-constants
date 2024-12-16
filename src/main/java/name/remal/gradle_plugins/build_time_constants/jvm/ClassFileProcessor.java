@@ -68,6 +68,13 @@ import org.objectweb.asm.tree.TypeInsnNode;
 @RequiredArgsConstructor
 class ClassFileProcessor {
 
+    private static final String BUILD_TIME_CONSTANTS_INTERNAL_NAME =
+        "name/remal/gradle_plugins/build_time_constants/api/BuildTimeConstants";
+
+    private static final String LEGACY_BUILD_TIME_CONSTANTS_INTERNAL_NAME =
+        "name/remal/gradle_plugins/api/BuildTimeConstants";
+
+
     private static final boolean PUT_PROPERTY_MAPS_TO_FIELDS = true;
     private static final boolean IN_TEST = isInUnitTest();
 
@@ -85,6 +92,12 @@ class ClassFileProcessor {
         try (val inputStream = newInputStream(sourcePath)) {
             classReader = new ClassReader(inputStream);
             classReader.accept(classNode, 0);
+        }
+
+        if (BUILD_TIME_CONSTANTS_INTERNAL_NAME.equals(classNode.name)
+            || LEGACY_BUILD_TIME_CONSTANTS_INTERNAL_NAME.equals(classNode.name)
+        ) {
+            return;
         }
 
         if (classNode.invisibleAnnotations != null && !IN_TEST) {
@@ -108,11 +121,6 @@ class ClassFileProcessor {
 
 
         if (changed) {
-            classNode.methods.forEach(methodNode -> {
-                methodNode.maxStack = 1;
-                methodNode.maxLocals = 1;
-            });
-
             val classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
             ClassVisitor classVisitor = classWriter;
             if (IN_TEST) {
@@ -169,13 +177,6 @@ class ClassFileProcessor {
             });
         });
     }
-
-    private static final String BUILD_TIME_CONSTANTS_INTERNAL_NAME =
-        "name/remal/gradle_plugins/build_time_constants/api/BuildTimeConstants";
-
-    private static final String LEGACY_BUILD_TIME_CONSTANTS_INTERNAL_NAME =
-        "name/remal/gradle_plugins/api/BuildTimeConstants";
-
 
     @SuppressWarnings({"java:S3776", "java:S6541", "java:S127"})
     private void processInstructions(ClassNode classNode, MethodNode methodNode, InsnList instructions) {
