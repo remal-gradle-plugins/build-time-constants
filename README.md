@@ -6,6 +6,12 @@
 
 [![configuration cache: supported](https://img.shields.io/static/v1?label=configuration%20cache&message=supported&color=success)](https://docs.gradle.org/current/userguide/configuration_cache.html)
 
+Usage:
+
+<!--plugin-usage:name.remal.build-time-constants--><!--/plugin-usage-->
+
+&nbsp;
+
 The plugin automatically adds
 <code><!--property:apiNotationWithoutVersion-->name.remal.gradle-plugins.build-time-constants:build-time-constants-api<!--/property--></code>
 dependency to `compileOnly` configuration of every [`SourceSet`](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/SourceSet.html).
