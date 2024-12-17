@@ -39,6 +39,7 @@ First, set the property as a build-time property for replacement:
 ```groovy
 buildTimeConstants {
   property('version', project.version)
+  property('version', provider { project.version } ) // providers and Gradle properties are supported too
 }
 ```
 
