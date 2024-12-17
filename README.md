@@ -28,28 +28,30 @@ The plugin processes `*.class` files and injects build-time constants instead of
 
 ## Using build-time properties
 
-Let's say, a developer would like to use the current version of the project in the project's code.
+Let's say a developer would like to use the project's current version in the project's code.
 
-Common ways to do so are code generation are sources preprocessing. It's quite complex.
+Common ways to do so are code generation and source preprocessing. And both of the ways are pretty complex.
 
-This plugin provides a simpler solution.
+This plugin provides a more straightforward solution.
 
-First, set property as a build-time property for replacement:
+First, set the property as a build-time property for replacement:
 
 ```groovy
-buildTimeConstants.property('version', project.version)
+buildTimeConstants {
+  property('version', project.version)
+}
 ```
 
 Second, use `BuildTimeConstants.getStringProperty("version")` in the code.
 
-Third, the plugin will replace `getStringProperty` invocation with the value of `project.version`.
+Third, the plugin will replace `getStringProperty()` invocation with the `project.version` value.
 
 See the Javadoc documentation for other `BuildTimeConstants.get*Property()` and `BuildTimeConstants.get*Properties()` methods.
 
 ## Decoupling from class literals
 
-When working with optional dependencies, class names are usually used instead of class literals (`java.lang.Object` instead of `Object.class`).
-The issue with class names as strings is that they are not checked at build-time and can be missed during refactoring.
+When working with optional dependencies, class names are usually used instead of class literals (`"java.lang.Object"` instead of `Object.class`).
+The issue with class names as strings is that they are not checked at build time and can be missed during refactoring.
 
 This plugin can convert class literals to string values.
 For example, `BuildTimeConstants.getClassName(Object.class)` will be converted to `java.lang.Object`.
