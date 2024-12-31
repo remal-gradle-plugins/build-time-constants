@@ -331,7 +331,9 @@ class ClassFileProcessor {
                 return (LdcInsnNode) insn;
             }
 
-            if (insn instanceof LineNumberNode) {
+            if (insn instanceof LineNumberNode
+                || insn instanceof LabelNode
+            ) {
                 continue;
             }
 

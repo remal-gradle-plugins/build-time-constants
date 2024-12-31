@@ -1,5 +1,6 @@
 package name.remal.gradle_plugins.build_time_constants.jvm;
 
+import static java.util.Collections.singletonList;
 import static name.remal.gradle_plugins.toolkit.reflection.ReflectionUtils.packageNameOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -65,6 +66,24 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         @SuppressWarnings("unused")
         static Object test() {
             return BuildTimeConstants.getClassName(ClassFileProcessorTest.class);
+        }
+    }
+
+    @Test
+    void getClassNameMultiline() {
+        assertEquals(
+            singletonList(GetClassNameMultiline.class.getName()),
+            processAndCallTestMethod(GetClassNameMultiline.class)
+        );
+    }
+
+    @InlineBuildTimeConstantsInTestsOnly
+    private static class GetClassNameMultiline {
+        @SuppressWarnings("unused")
+        static Object test() {
+            return singletonList(
+                BuildTimeConstants.getClassName(GetClassNameMultiline.class)
+            );
         }
     }
 
