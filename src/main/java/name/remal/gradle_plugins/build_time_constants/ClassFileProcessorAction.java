@@ -1,4 +1,4 @@
-package name.remal.gradle_plugins.build_time_constants.jvm;
+package name.remal.gradle_plugins.build_time_constants;
 
 import static name.remal.gradle_plugins.toolkit.AbstractCompileUtils.getDestinationDir;
 
@@ -6,13 +6,14 @@ import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.gradle.api.Action;
+import org.gradle.api.Describable;
 import org.gradle.api.Task;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.tasks.compile.AbstractCompile;
 
 @RequiredArgsConstructor
-abstract class ClassFileProcessorAction implements Action<Task> {
+abstract class ClassFileProcessorAction implements Action<Task>, Describable {
 
     public abstract MapProperty<String, String> getProperties();
 
@@ -32,6 +33,11 @@ abstract class ClassFileProcessorAction implements Action<Task> {
                 new ClassFileProcessor(path, path, getProperties().get()).process();
             }
         });
+    }
+
+    @Override
+    public String getDisplayName() {
+        return ClassFileProcessorAction.class.getName();
     }
 
 

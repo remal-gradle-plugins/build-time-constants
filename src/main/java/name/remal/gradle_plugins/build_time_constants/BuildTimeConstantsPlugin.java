@@ -1,18 +1,16 @@
-package name.remal.gradle_plugins.build_time_constants.jvm;
+package name.remal.gradle_plugins.build_time_constants;
 
 import static java.lang.String.format;
-import static name.remal.gradle_plugins.build_time_constants.jvm.BuildTimeConstantsApiBuildInfo.BUILD_TIME_CONSTANTS_API_ARTIFACT_ID;
-import static name.remal.gradle_plugins.build_time_constants.jvm.BuildTimeConstantsApiBuildInfo.BUILD_TIME_CONSTANTS_API_GROUP;
-import static name.remal.gradle_plugins.build_time_constants.jvm.BuildTimeConstantsApiBuildInfo.BUILD_TIME_CONSTANTS_API_VERSION;
+import static name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsApiBuildInfo.BUILD_TIME_CONSTANTS_API_ARTIFACT_ID;
+import static name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsApiBuildInfo.BUILD_TIME_CONSTANTS_API_GROUP;
+import static name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsApiBuildInfo.BUILD_TIME_CONSTANTS_API_VERSION;
+import static name.remal.gradle_plugins.toolkit.ObjectUtils.doNotInline;
 import static name.remal.gradle_plugins.toolkit.ObjectUtils.unwrapProviders;
-import static name.remal.gradle_plugins.toolkit.PluginManagerUtils.withAnyOfPlugins;
 
 import java.util.LinkedHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.val;
-import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsBasePlugin;
-import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsExtension;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ExternalModuleDependency;
@@ -21,13 +19,15 @@ import org.gradle.api.provider.ProviderFactory;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.compile.AbstractCompile;
 
-public abstract class BuildTimeConstantsJvmPlugin implements Plugin<Project> {
+public abstract class BuildTimeConstantsPlugin implements Plugin<Project> {
+
+    public static final String BUILD_TIME_CONSTANTS_EXTENSION_NAME = doNotInline("buildTimeConstants");
 
     @Override
     public void apply(Project project) {
-        project.getPluginManager().apply(BuildTimeConstantsBasePlugin.class);
+        project.getExtensions().create(BUILD_TIME_CONSTANTS_EXTENSION_NAME, BuildTimeConstantsExtension.class);
 
-        withAnyOfPlugins(project.getPluginManager(), "java-base", __ -> {
+        project.getPluginManager().withPlugin("java", __ -> {
             val sourceSets = project.getExtensions().getByType(SourceSetContainer.class);
             sourceSets.configureEach(sourceSet ->
                 project.getConfigurations().named(sourceSet.getCompileOnlyConfigurationName(), conf -> {

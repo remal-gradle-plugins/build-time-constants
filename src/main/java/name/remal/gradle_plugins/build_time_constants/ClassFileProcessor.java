@@ -1,11 +1,11 @@
-package name.remal.gradle_plugins.build_time_constants.jvm;
+package name.remal.gradle_plugins.build_time_constants;
 
 import static com.google.common.hash.Hashing.sha512;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.Files.write;
-import static name.remal.gradle_plugins.build_time_constants.jvm.BytecodeTestUtils.wrapWithTestClassVisitors;
+import static name.remal.gradle_plugins.build_time_constants.BytecodeTestUtils.wrapWithTestClassVisitors;
 import static name.remal.gradle_plugins.toolkit.InTestFlags.isInUnitTest;
 import static name.remal.gradle_plugins.toolkit.StringUtils.escapeRegex;
 import static name.remal.gradle_plugins.toolkit.StringUtils.substringAfterLast;
@@ -46,7 +46,6 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
-import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsException;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -73,6 +72,13 @@ class ClassFileProcessor {
 
     private static final String LEGACY_BUILD_TIME_CONSTANTS_INTERNAL_NAME =
         "name/remal/gradle_plugins/api/BuildTimeConstants";
+
+    @SuppressWarnings("java:S5803")
+    private static final String INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_DESC =
+        getDescriptor(InlineBuildTimeConstantsInTestsOnly.class);
+
+    private static final String INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_LEGACY_DESC =
+        "Lname/remal/gradle_plugins/build_time_constants/jvm/InlineBuildTimeConstantsInTestsOnly;";
 
 
     private static final boolean PUT_PROPERTY_MAPS_TO_FIELDS = true;
@@ -102,7 +108,9 @@ class ClassFileProcessor {
 
         if (classNode.invisibleAnnotations != null && !IN_TEST) {
             for (val annotation : classNode.invisibleAnnotations) {
-                if (annotation.desc.equals(INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_DESC)) {
+                if (annotation.desc.equals(INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_DESC)
+                    || annotation.desc.equals(INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_LEGACY_DESC)
+                ) {
                     return;
                 }
             }
@@ -139,10 +147,6 @@ class ClassFileProcessor {
             write(targetPath, bytecode);
         }
     }
-
-    @SuppressWarnings("java:S5803")
-    private static final String INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_DESC =
-        getDescriptor(InlineBuildTimeConstantsInTestsOnly.class);
 
 
     private void processClass(ClassNode classNode) {

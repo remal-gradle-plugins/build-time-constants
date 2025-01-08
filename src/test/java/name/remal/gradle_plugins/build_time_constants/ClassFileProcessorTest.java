@@ -1,4 +1,4 @@
-package name.remal.gradle_plugins.build_time_constants.jvm;
+package name.remal.gradle_plugins.build_time_constants;
 
 import static java.util.Collections.singletonList;
 import static name.remal.gradle_plugins.toolkit.reflection.ReflectionUtils.packageNameOf;
@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.SneakyThrows;
 import lombok.val;
-import name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsException;
 import name.remal.gradle_plugins.build_time_constants.api.BuildTimeConstants;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class NotChanged {
         @SuppressWarnings("unused")
         static Object test() {
@@ -43,7 +43,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class NotConstantParameter {
         @SuppressWarnings("unused")
         @SneakyThrows
@@ -61,7 +62,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetClassName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -77,7 +79,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetClassNameMultiline {
         @SuppressWarnings("unused")
         static Object test() {
@@ -96,7 +99,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetClassSimpleName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -113,7 +117,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetClassPackageName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -130,7 +135,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetClassInternalName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -147,7 +153,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetClassDescriptor {
         @SuppressWarnings("unused")
         static Object test() {
@@ -171,7 +178,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetStringProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -208,7 +216,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetIntegerProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -243,7 +252,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetLongProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -274,7 +284,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetBooleanProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -338,7 +349,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetStringProperties {
         @SuppressWarnings("unused")
         static Object test() {
@@ -412,7 +424,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetIntegerProperties {
         @SuppressWarnings("unused")
         static Object test() {
@@ -486,7 +499,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetLongProperties {
         @SuppressWarnings("unused")
         static Object test() {
@@ -550,7 +564,8 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @InlineBuildTimeConstantsInTestsOnly
+    @SuppressWarnings("deprecation")
+    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
     private static class GetBooleanProperties {
         @SuppressWarnings("unused")
         static Object test() {

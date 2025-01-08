@@ -3,37 +3,38 @@ package name.remal.gradle_plugins.build_time_constants;
 import static name.remal.gradle_plugins.toolkit.reflection.ReflectionUtils.packageNameOf;
 import static name.remal.gradle_plugins.toolkit.reflection.ReflectionUtils.unwrapGeneratedSubclass;
 import static name.remal.gradle_plugins.toolkit.testkit.ProjectValidations.executeAfterEvaluateActions;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import name.remal.gradle_plugins.toolkit.testkit.TaskValidations;
 import org.gradle.api.Project;
+import org.gradle.api.tasks.compile.AbstractCompile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @RequiredArgsConstructor
-class BuildTimeConstantsBasePluginTest {
+class BuildTimeConstantsPluginTest {
 
     final Project project;
 
     @BeforeEach
     void beforeEach() {
-        project.getPluginManager().apply(BuildTimeConstantsBasePlugin.class);
-    }
-
-    @Test
-    void extensionIsAdded() {
-        assertNotNull(project.getExtensions().getByType(BuildTimeConstantsExtension.class));
+        project.getPluginManager().apply(BuildTimeConstantsPlugin.class);
     }
 
     @Test
     void pluginTasksDoNotHavePropertyProblems() {
+        project.getPluginManager().apply("java");
+
         executeAfterEvaluateActions(project);
 
-        val taskClassNamePrefix = packageNameOf(BuildTimeConstantsBasePlugin.class) + '.';
+        val taskClassNamePrefix = packageNameOf(BuildTimeConstantsPlugin.class) + '.';
         project.getTasks().stream()
             .filter(task -> {
+                if (task instanceof AbstractCompile) {
+                    return true;
+                }
+
                 val taskClass = unwrapGeneratedSubclass(task.getClass());
                 return taskClass.getName().startsWith(taskClassNamePrefix);
             })

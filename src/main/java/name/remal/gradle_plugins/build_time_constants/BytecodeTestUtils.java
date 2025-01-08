@@ -1,4 +1,4 @@
-package name.remal.gradle_plugins.build_time_constants.jvm;
+package name.remal.gradle_plugins.build_time_constants;
 
 import static lombok.AccessLevel.PRIVATE;
 

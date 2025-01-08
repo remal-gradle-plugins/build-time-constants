@@ -1,4 +1,4 @@
-package name.remal.gradle_plugins.build_time_constants.jvm;
+package name.remal.gradle_plugins.build_time_constants;
 
 import static java.lang.String.join;
 
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @RequiredArgsConstructor
-class BuildTimeConstantsJvmPluginFunctionalTest {
+class BuildTimeConstantsPluginFunctionalTest {
 
     private final GradleProject project;
 

@@ -52,8 +52,8 @@ gradlePlugin {
     plugins {
         'name.remal.build-time-constants' {
             id = 'name.remal.build-time-constants'
-            implementationClass = 'name.remal.gradle_plugins.build_time_constants.jvm.BuildTimeConstantsJvmPlugin'
-            displayName = 'Insert compile-time constants into JVM class files'
+            implementationClass = 'name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsPlugin'
+            displayName = 'Insert build-time constants into JVM class files'
             description = property('repository-description')
         }
     }
@@ -75,7 +75,7 @@ tasks.named('generateJava') {
     inputs.property('groupId', apiGroup)
     inputs.property('artifactId', apiArtifactId)
     inputs.property('version', apiVersion)
-    classFile(project.calculateBaseJavaPackage() + '.jvm', 'BuildTimeConstantsApiBuildInfo') {
+    classFile(project.calculateBaseJavaPackage(), 'BuildTimeConstantsApiBuildInfo') {
         it.writePackage()
         it.println("")
         it.writeImport("org.jetbrains.annotations.ApiStatus.Internal")
