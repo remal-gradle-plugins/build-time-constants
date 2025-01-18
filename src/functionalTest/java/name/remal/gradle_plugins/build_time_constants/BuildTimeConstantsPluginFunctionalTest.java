@@ -35,14 +35,12 @@ class BuildTimeConstantsPluginFunctionalTest {
             "}"
         ));
 
-        project.getBuildFile()
-            .registerDefaultTask("compileJava");
-        project.assertBuildSuccessfully();
+        project.assertBuildSuccessfully("compileJava");
     }
 
     @Test
     void getStringProperty() {
-        project.getBuildFile().append("buildTimeConstants.property('prop', 'value')");
+        project.getBuildFile().line("buildTimeConstants.property('prop', 'value')");
 
         project.writeTextFile("src/main/java/pkg/TestClass.java", join(
             "\n",
@@ -55,9 +53,7 @@ class BuildTimeConstantsPluginFunctionalTest {
             "}"
         ));
 
-        project.getBuildFile()
-            .registerDefaultTask("compileJava");
-        project.assertBuildSuccessfully();
+        project.assertBuildSuccessfully("compileJava");
     }
 
 }
