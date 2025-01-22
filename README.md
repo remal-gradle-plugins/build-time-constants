@@ -11,7 +11,7 @@ Usage:
 <!--plugin-usage:name.remal.build-time-constants-->
 ```groovy
 plugins {
-    id 'name.remal.build-time-constants' version '1.0.0'
+    id 'name.remal.build-time-constants' version '2.0.0'
 }
 ```
 <!--/plugin-usage-->
