@@ -4,7 +4,6 @@ import static lombok.AccessLevel.PRIVATE;
 
 import java.io.PrintWriter;
 import lombok.NoArgsConstructor;
-import lombok.val;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -20,7 +19,7 @@ abstract class BytecodeTestUtils {
     @SuppressWarnings({"java:S106", "DefaultCharset"})
     public static ClassVisitor wrapWithTestClassVisitors(ClassVisitor classVisitor) {
         if (TRACE) {
-            val writer = new PrintWriter(System.out, true);
+            var writer = new PrintWriter(System.out, true);
             classVisitor = new TraceClassVisitor(classVisitor, writer);
         }
 

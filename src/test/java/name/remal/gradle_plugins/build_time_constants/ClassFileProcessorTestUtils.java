@@ -27,7 +27,6 @@ import java.util.TreeSet;
 import java.util.stream.LongStream;
 import javax.annotation.Nullable;
 import lombok.SneakyThrows;
-import lombok.val;
 import org.junit.jupiter.api.parallel.Execution;
 
 @Execution(SAME_THREAD)
@@ -40,23 +39,23 @@ abstract class ClassFileProcessorTestUtils {
     @SneakyThrows
     protected final Object processAndCallTestMethod(Class<?> clazz, Map<String, String> properties) {
         try (
-            val fileSystem = Jimfs.newFileSystem(unix());
-            val classLoader = new CurrentFileSystemClassLoader()
+            var fileSystem = Jimfs.newFileSystem(unix());
+            var classLoader = new CurrentFileSystemClassLoader()
         ) {
             currentFileSystem.set(fileSystem);
 
-            val bytecodePath = '/' + clazz.getName().replace('.', '/') + ".class";
-            val bytecodeUrl = requireNonNull(clazz.getResource(bytecodePath));
-            val sourcePath = Paths.get(bytecodeUrl.toURI());
-            val targetPath = fileSystem.getPath(bytecodePath);
+            var bytecodePath = '/' + clazz.getName().replace('.', '/') + ".class";
+            var bytecodeUrl = requireNonNull(clazz.getResource(bytecodePath));
+            var sourcePath = Paths.get(bytecodeUrl.toURI());
+            var targetPath = fileSystem.getPath(bytecodePath);
             new ClassFileProcessor(sourcePath, targetPath, properties).process();
 
             if (!exists(targetPath)) {
                 throw new ClassNotChangedException();
             }
 
-            val transformedClass = classLoader.loadClass(clazz.getName());
-            val testMethod = makeAccessible(transformedClass.getDeclaredMethod("test"));
+            var transformedClass = classLoader.loadClass(clazz.getName());
+            var testMethod = makeAccessible(transformedClass.getDeclaredMethod("test"));
             try {
                 return testMethod.invoke(null);
             } catch (InvocationTargetException e) {
@@ -182,7 +181,7 @@ abstract class ClassFileProcessorTestUtils {
                 return;
             }
 
-            val path = currentFileSystem.get().getPath(url.getPath());
+            var path = currentFileSystem.get().getPath(url.getPath());
             if (isDirectory(path)) {
                 throw new AssertionError("A directory: " + path);
             }

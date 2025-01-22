@@ -10,7 +10,6 @@ import static org.objectweb.asm.Type.getInternalName;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import lombok.SneakyThrows;
-import lombok.val;
 import name.remal.gradle_plugins.build_time_constants.api.BuildTimeConstants;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +24,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class NotChanged {
         @SuppressWarnings("unused")
         static Object test() {
@@ -43,8 +41,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class NotConstantParameter {
         @SuppressWarnings("unused")
         @SneakyThrows
@@ -62,8 +59,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetClassName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -79,8 +75,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetClassNameMultiline {
         @SuppressWarnings("unused")
         static Object test() {
@@ -99,8 +94,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetClassSimpleName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -117,8 +111,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetClassPackageName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -135,8 +128,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetClassInternalName {
         @SuppressWarnings("unused")
         static Object test() {
@@ -153,8 +145,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetClassDescriptor {
         @SuppressWarnings("unused")
         static Object test() {
@@ -178,8 +169,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetStringProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -216,8 +206,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetIntegerProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -252,8 +241,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetLongProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -284,8 +272,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         );
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetBooleanProperty {
         @SuppressWarnings("unused")
         static Object test() {
@@ -298,7 +285,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
     @SuppressWarnings("unchecked")
     void getStringProperties() {
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
             assertEquals(
@@ -309,7 +296,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
                 "key.1", "value1"
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -322,7 +309,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
                 "key.1", "value1",
                 "key.2", "value2"
             ));
@@ -337,7 +324,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetStringProperties.class, ImmutableMap.of(
                 "key", "value"
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -349,8 +336,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetStringProperties {
         @SuppressWarnings("unused")
         static Object test() {
@@ -363,7 +349,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
     @SuppressWarnings("unchecked")
     void getIntegerProperties() {
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
             assertEquals(
@@ -374,7 +360,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
                 "key.1", "1"
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -387,7 +373,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
                 "key.1", "1",
                 "key.2", "2"
             ));
@@ -402,7 +388,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetIntegerProperties.class, ImmutableMap.of(
                 "key", ""
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -424,8 +410,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetIntegerProperties {
         @SuppressWarnings("unused")
         static Object test() {
@@ -438,7 +423,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
     @SuppressWarnings("unchecked")
     void getLongProperties() {
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
             assertEquals(
@@ -449,7 +434,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
                 "key.1", "1"
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -462,7 +447,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
                 "key.1", "1",
                 "key.2", "2"
             ));
@@ -477,7 +462,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetLongProperties.class, ImmutableMap.of(
                 "key", ""
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -499,8 +484,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetLongProperties {
         @SuppressWarnings("unused")
         static Object test() {
@@ -513,7 +497,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
     @SuppressWarnings("unchecked")
     void getBooleanProperties() {
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
             assertEquals(
@@ -524,7 +508,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
                 "key.1", "true"
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -537,7 +521,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
                 "key.1", "faLSe",
                 "key.2", "tRUe"
             ));
@@ -552,7 +536,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
 
         {
-            val result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
+            var result = (Map<Object, Object>) processAndCallTestMethod(GetBooleanProperties.class, ImmutableMap.of(
                 "key", ""
             ));
             assertThrows(UnsupportedOperationException.class, () -> result.put("test", "test"));
@@ -564,8 +548,7 @@ class ClassFileProcessorTest extends ClassFileProcessorTestUtils {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @name.remal.gradle_plugins.build_time_constants.jvm.InlineBuildTimeConstantsInTestsOnly
+    @InlineBuildTimeConstantsInTestsOnly
     private static class GetBooleanProperties {
         @SuppressWarnings("unused")
         static Object test() {

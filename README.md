@@ -59,3 +59,9 @@ For example, `BuildTimeConstants.getClassName(Object.class)` will be converted t
 
 See the Javadoc documentation for other `BuildTimeConstants.getClass*()` methods.
 
+# Migration guide
+
+## Version 1.* to 2.*
+
+The minimum Java version is 11 (from 8).
+The minimum Gradle version is 7.0 (from 6.7).

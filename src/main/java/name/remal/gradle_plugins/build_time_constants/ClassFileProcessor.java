@@ -33,7 +33,6 @@ import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Type.getDescriptor;
 
-import com.google.common.collect.ImmutableList;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.val;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -93,9 +91,9 @@ class ClassFileProcessor {
     @SneakyThrows
     @SuppressWarnings("java:S3776")
     public void process() {
-        val classNode = new ClassNode();
+        var classNode = new ClassNode();
         ClassReader classReader;
-        try (val inputStream = newInputStream(sourcePath)) {
+        try (var inputStream = newInputStream(sourcePath)) {
             classReader = new ClassReader(inputStream);
             classReader.accept(classNode, 0);
         }
@@ -107,7 +105,7 @@ class ClassFileProcessor {
         }
 
         if (classNode.invisibleAnnotations != null && !IN_TEST) {
-            for (val annotation : classNode.invisibleAnnotations) {
+            for (var annotation : classNode.invisibleAnnotations) {
                 if (annotation.desc.equals(INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_DESC)
                     || annotation.desc.equals(INLINE_BUILD_TIME_CONSTANTS_IN_TESTS_ONLY_LEGACY_DESC)
                 ) {
@@ -116,29 +114,21 @@ class ClassFileProcessor {
             }
         }
 
-        if (classNode.fields == null) {
-            classNode.fields = new ArrayList<>();
-        }
-
-        if (classNode.methods == null) {
-            classNode.methods = new ArrayList<>();
-        }
-
 
         processClass(classNode);
 
 
         if (changed) {
-            val classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
+            var classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
             ClassVisitor classVisitor = classWriter;
             if (IN_TEST) {
                 classVisitor = wrapWithTestClassVisitors(classVisitor);
             }
             classNode.accept(classVisitor);
-            val bytecode = classWriter.toByteArray();
+            var bytecode = classWriter.toByteArray();
 
             if (sourcePath != targetPath) {
-                val targetDirPath = targetPath.getParent();
+                var targetDirPath = targetPath.getParent();
                 if (targetDirPath != null) {
                     Files.createDirectories(targetDirPath);
                 }
@@ -150,13 +140,13 @@ class ClassFileProcessor {
 
 
     private void processClass(ClassNode classNode) {
-        if (classNode.methods == null || classNode.methods.isEmpty()) {
+        if (classNode.methods.isEmpty()) {
             return;
         }
 
         new ArrayList<>(classNode.methods).forEach(methodNode -> {
-            val instructions = methodNode.instructions;
-            if (instructions == null || instructions.size() == 0) {
+            var instructions = methodNode.instructions;
+            if (instructions.size() == 0) {
                 return;
             }
 
@@ -164,7 +154,7 @@ class ClassFileProcessor {
 
             instructions.forEach(insn -> {
                 if (insn instanceof MethodInsnNode) {
-                    val methodInsn = (MethodInsnNode) insn;
+                    var methodInsn = (MethodInsnNode) insn;
                     if (methodInsn.owner.equals(BUILD_TIME_CONSTANTS_INTERNAL_NAME)) {
                         throw new BuildTimeConstantsException(format(
                             "Invocation of %s.%s%s was not substituted in %s.%s%s."
@@ -193,7 +183,7 @@ class ClassFileProcessor {
                 continue;
             }
 
-            val methodInsn = (MethodInsnNode) insn;
+            var methodInsn = (MethodInsnNode) insn;
             if (methodInsn.getOpcode() != INVOKESTATIC) {
                 continue;
             }
@@ -204,7 +194,7 @@ class ClassFileProcessor {
                 continue;
             }
 
-            val ldcInsn = getPrevLdcInsn(methodInsn);
+            var ldcInsn = getPrevLdcInsn(methodInsn);
             if (ldcInsn == null) {
                 continue;
             }
@@ -314,7 +304,7 @@ class ClassFileProcessor {
                 continue;
             }
 
-            val newInsnList = new InsnList();
+            var newInsnList = new InsnList();
             newInsns.forEach(newInsnList::add);
             instructions.insert(methodInsn, newInsnList);
 
@@ -347,13 +337,14 @@ class ClassFileProcessor {
     }
 
     private static List<AbstractInsnNode> createConstantInsns(Object value) {
-        return ImmutableList.of(createConstantInsn(value));
+        return List.of(createConstantInsn(value));
     }
 
+    @SuppressWarnings("java:S5411")
     private static List<AbstractInsnNode> createBoxedConstantInsns(Object value) {
         if (value instanceof Boolean) {
-            val boolValue = (Boolean) value;
-            return ImmutableList.of(new FieldInsnNode(
+            var boolValue = (Boolean) value;
+            return List.of(new FieldInsnNode(
                 GETSTATIC,
                 "java/lang/Boolean",
                 boolValue ? "TRUE" : "FALSE",
@@ -361,7 +352,7 @@ class ClassFileProcessor {
             ));
         }
 
-        val result = ImmutableList.<AbstractInsnNode>builder();
+        var result = new ArrayList<AbstractInsnNode>();
         result.add(createConstantInsn(value));
 
         if (value instanceof Character) {
@@ -421,13 +412,13 @@ class ClassFileProcessor {
             ));
         }
 
-        return result.build();
+        return result;
     }
 
-    @SuppressWarnings("java:S3776")
+    @SuppressWarnings({"java:S3776", "java:S5411"})
     private static AbstractInsnNode createConstantInsn(Object value) {
         if (value instanceof Boolean) {
-            val boolValue = (Boolean) value;
+            var boolValue = (Boolean) value;
             return new InsnNode(boolValue ? ICONST_1 : ICONST_0);
         }
 
@@ -486,8 +477,8 @@ class ClassFileProcessor {
             return createMapInsns(values);
         }
 
-        val valueHash = sha512().hashString(value.toString(), UTF_8).toString();
-        val fieldName = "$" + scope + "$" + valueHash;
+        var valueHash = sha512().hashString(value.toString(), UTF_8).toString();
+        var fieldName = "$" + scope + "$" + valueHash;
         FieldNode field = classNode.fields.stream()
             .filter(it -> it.name.equals(fieldName))
             .findAny()
@@ -519,15 +510,12 @@ class ClassFileProcessor {
             }
 
             InsnList instructions = staticInitMethod.instructions;
-            if (instructions == null) {
-                instructions = staticInitMethod.instructions = new InsnList();
-            }
             if (instructions.size() == 0) {
                 instructions.add(new LabelNode());
                 instructions.add(new InsnNode(RETURN));
             }
 
-            val insnsToAdd = new InsnList();
+            var insnsToAdd = new InsnList();
             createMapInsns(values).forEach(insnsToAdd::add);
             insnsToAdd.add(new FieldInsnNode(
                 PUTSTATIC,
@@ -536,7 +524,7 @@ class ClassFileProcessor {
                 field.desc
             ));
 
-            val prevInsn = getFirstLabelNode(instructions);
+            var prevInsn = getFirstLabelNode(instructions);
             if (prevInsn == null) {
                 instructions.insert(insnsToAdd);
             } else {
@@ -544,7 +532,7 @@ class ClassFileProcessor {
             }
         }
 
-        return ImmutableList.of(new FieldInsnNode(
+        return List.of(new FieldInsnNode(
             GETSTATIC,
             classNode.name,
             field.name,
@@ -554,7 +542,7 @@ class ClassFileProcessor {
 
     private static List<AbstractInsnNode> createMapInsns(Map<?, ?> values) {
         if (values.isEmpty()) {
-            return ImmutableList.of(
+            return List.of(
                 new MethodInsnNode(
                     INVOKESTATIC,
                     "java/util/Collections",
@@ -564,8 +552,8 @@ class ClassFileProcessor {
             );
 
         } else if (values.size() == 1) {
-            val entry = values.entrySet().iterator().next();
-            val result = ImmutableList.<AbstractInsnNode>builder();
+            var entry = values.entrySet().iterator().next();
+            var result = new ArrayList<AbstractInsnNode>();
             result.add(createConstantInsn(entry.getKey()));
             result.addAll(createBoxedConstantInsns(entry.getValue()));
             result.add(new MethodInsnNode(
@@ -574,10 +562,10 @@ class ClassFileProcessor {
                 "singletonMap",
                 "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
             ));
-            return result.build();
+            return result;
 
         } else {
-            val result = ImmutableList.<AbstractInsnNode>builder();
+            var result = new ArrayList<AbstractInsnNode>();
             result.add(new TypeInsnNode(NEW, "java/util/LinkedHashMap"));
             result.add(new InsnNode(DUP));
             result.add(createConstantInsn(values.size()));
@@ -600,7 +588,7 @@ class ClassFileProcessor {
                 "unmodifiableMap",
                 "(Ljava/util/Map;)Ljava/util/Map;"
             ));
-            return result.build();
+            return result;
         }
     }
 
@@ -611,7 +599,7 @@ class ClassFileProcessor {
     ) {
         Map<String, T> result = new LinkedHashMap<>();
 
-        val pattern = Pattern.compile(
+        var pattern = Pattern.compile(
             escapeRegex(propertyNamePattern.toString())
                 .replace("\\*", ".*")
         );

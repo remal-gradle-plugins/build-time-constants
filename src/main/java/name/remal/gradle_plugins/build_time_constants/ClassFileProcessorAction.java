@@ -1,10 +1,7 @@
 package name.remal.gradle_plugins.build_time_constants;
 
-import static name.remal.gradle_plugins.toolkit.AbstractCompileUtils.getDestinationDir;
-
 import javax.inject.Inject;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.gradle.api.Action;
 import org.gradle.api.Describable;
 import org.gradle.api.Task;
@@ -19,17 +16,17 @@ abstract class ClassFileProcessorAction implements Action<Task>, Describable {
 
     @Override
     public void execute(Task untypedTask) {
-        val task = (AbstractCompile) untypedTask;
-        val destinationDir = getDestinationDir(task);
+        var task = (AbstractCompile) untypedTask;
+        var destinationDir = task.getDestinationDirectory().getAsFile().getOrNull();
         if (destinationDir == null) {
             return;
         }
 
-        val fileTree = getObjects().fileTree().from(destinationDir);
+        var fileTree = getObjects().fileTree().from(destinationDir);
         fileTree.include("**/*.class");
         fileTree.visit(details -> {
             if (!details.isDirectory()) {
-                val path = details.getFile().toPath();
+                var path = details.getFile().toPath();
                 new ClassFileProcessor(path, path, getProperties().get()).process();
             }
         });
