@@ -1,9 +1,9 @@
 # This file is generated automatically by `collectAllGradlePluginApiDependencies` Gradle task.
 # Do not modify it yourself unless you know what you are doing.
 
-org.ow2.asm:asm-analysis:9.7.1
-org.ow2.asm:asm-bom:9.7.1:@pom
-org.ow2.asm:asm-tree:9.7.1
-org.ow2.asm:asm-util:9.7.1
-org.ow2.asm:asm:9.7.1
+org.ow2.asm:asm-analysis:9.8
+org.ow2.asm:asm-bom:9.8:@pom
+org.ow2.asm:asm-tree:9.8
+org.ow2.asm:asm-util:9.8
+org.ow2.asm:asm:9.8
 zzzz-classes-relying-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsPlugin:8174fb5970f01c066b2e68f5ca8e08e756e0dfc8619375b8ccebd93f2d88310
