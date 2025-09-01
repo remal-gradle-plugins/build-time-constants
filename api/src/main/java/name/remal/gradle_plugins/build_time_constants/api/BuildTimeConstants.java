@@ -3,7 +3,9 @@ package name.remal.gradle_plugins.build_time_constants.api;
 import java.util.Map;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class BuildTimeConstants {
 
     /**

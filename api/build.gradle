@@ -1,6 +1,10 @@
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
+dependencies {
+    compileOnly 'org.jspecify:jspecify:1.0.0'
+}
+
 publishing.publications.withType(MavenPublication).configureEach {
     pom {
         withXml { xml ->
