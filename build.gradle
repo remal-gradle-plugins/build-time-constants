@@ -14,6 +14,8 @@ buildscript {
     }
 }
 
+class ThisScriptLocation {}
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 allprojects {
@@ -72,6 +74,8 @@ project.ext['apiNotation'] = provider { "${apiGroup.get()}:${apiArtifactId.get()
 project.ext['apiNotationWithoutVersion'] = provider { "${apiGroup.get()}:${apiArtifactId.get()}" }
 
 generateSources.forMainSourceSet.java {
+    inputs.dir(getClassLocationFile(ThisScriptLocation)).withNormalizer(ClasspathNormalizer).optional()
+
     inputs.property('groupId', apiGroup)
     inputs.property('artifactId', apiArtifactId)
     inputs.property('version', apiVersion)
