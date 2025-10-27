@@ -6,4 +6,3 @@ org.ow2.asm:asm-bom:9.9:@pom
 org.ow2.asm:asm-tree:9.9
 org.ow2.asm:asm-util:9.9
 org.ow2.asm:asm:9.9
-zzzz-classes-relying-on-gradle-internal-api:name.remal.gradle_plugins.build_time_constants.BuildTimeConstantsPlugin:4c6896729756b128504a513183d6d7f07c455af45b008683abfc6f7e0669bf4b
