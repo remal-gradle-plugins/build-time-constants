@@ -1,7 +1,12 @@
 package name.remal.gradle_plugins.build_time_constants;
 
+import static java.util.Arrays.stream;
+
 import java.util.Map;
+import java.util.Objects;
 import org.gradle.api.Action;
+import org.gradle.api.Task;
+import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
 import org.jspecify.annotations.Nullable;
 
@@ -22,6 +27,23 @@ public abstract class BuildTimeConstantsExtension {
         if (value != null) {
             getProperties().put(name, value);
         }
+    }
+
+
+    public abstract ListProperty<Object> getCompilationDependencies();
+
+    /**
+     * Will call {@link Task#dependsOn(Object...)} on every JVM compilation task of the project.
+     */
+    @SuppressWarnings({"java:S2259", "java:S2583", "ConstantValue"})
+    public void dependOn(@Nullable Object... dependencies) {
+        if (dependencies == null) {
+            return;
+        }
+
+        stream(dependencies)
+            .filter(Objects::nonNull)
+            .forEach(getCompilationDependencies()::add);
     }
 
 }

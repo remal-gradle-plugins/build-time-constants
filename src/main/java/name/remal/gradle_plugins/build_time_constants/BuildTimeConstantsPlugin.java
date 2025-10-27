@@ -47,12 +47,10 @@ public abstract class BuildTimeConstantsPlugin implements Plugin<Project> {
 
         var extension = project.getExtensions().getByType(BuildTimeConstantsExtension.class);
 
-        var allProperties = extension.getProperties();
-
         var properties = getObjects().mapProperty(String.class, String.class);
         properties.value(getProviders().provider(() -> {
             var result = new LinkedHashMap<String, String>();
-            allProperties.get().forEach((Object key, Object value) -> {
+            extension.getProperties().get().forEach((Object key, Object value) -> {
                 key = unwrapProviders(key);
                 value = unwrapProviders(value);
                 if (key == null || value == null) {
@@ -70,6 +68,8 @@ public abstract class BuildTimeConstantsPlugin implements Plugin<Project> {
         project.getTasks()
             .matching(JvmLanguageCompilationUtils::isJvmLanguageCompileTask)
             .configureEach(task -> {
+                task.dependsOn(extension.getCompilationDependencies());
+
                 task.getInputs().property(
                     BuildTimeConstantsExtension.class.getSimpleName() + ".properties",
                     properties

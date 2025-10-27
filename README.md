@@ -9,11 +9,13 @@
 Usage:
 
 <!--plugin-usage:name.remal.build-time-constants-->
+
 ```groovy
 plugins {
-    id 'name.remal.build-time-constants' version '2.0.3'
+  id 'name.remal.build-time-constants' version '2.0.3'
 }
 ```
+
 <!--/plugin-usage-->
 
 &nbsp;
@@ -39,7 +41,7 @@ First, set the property as a build-time property for replacement:
 ```groovy
 buildTimeConstants {
   property('version', project.version)
-  property('version', provider { project.version } ) // providers and Gradle properties are supported too
+  property('version', provider { project.version }) // providers and Gradle properties are supported too
 }
 ```
 
@@ -59,9 +61,46 @@ For example, `BuildTimeConstants.getClassName(Object.class)` will be converted t
 
 See the Javadoc documentation for other `BuildTimeConstants.getClass*()` methods.
 
-# Migration guide
+## Additional dependencies for compilation tasks
 
-## Version 1.* to 2.*
+You can add additional dependencies to all JVM compilation tasks of the project via `buildTimeConstants` extension:
+
+```groovy
+TaskProvider writeProperties = tasks.register('writeProps', WriteProperties)
+
+Property<Integer> propertiesCount = project.objects.property(Integer).convention(
+  writeProperties
+    .flatMap { it.destinationFile }
+    .map { it.asFile }
+    .map {
+      Properties props = new Properties()
+      it.withInputStream { stream -> props.load(stream) }
+      return props.size()
+    }
+)
+
+buildTimeConstants {
+  // This alone does NOT create a dependency on the `writeProps` task
+  property('propertiesCount', propertiesCount)
+
+  // To create a dependency on the `propertiesCount` property and this will create a dependency on the `writeProps` task
+  dependOn(propertiesCount)
+}
+```
+
+Please remember that it adds dependencies to **all** JVM compilation tasks of the project, so you need to avoid circular dependencies.
+
+Basically, this functionality works like this:
+
+```groovy
+tasks.matching { isJvmCompilationTask(it) }.configureEach {
+  dependsOn(propertiesCount)
+}
+```
+
+## Migration guide
+
+### Version 1.* to 2.*
 
 The minimum Java version is 11 (from 8).
 The minimum Gradle version is 7.0 (from 6.7).
