@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.LongStream;
-import javax.annotation.Nullable;
 import lombok.SneakyThrows;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.parallel.Execution;
 
 @Execution(SAME_THREAD)

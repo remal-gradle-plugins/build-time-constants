@@ -8,7 +8,6 @@ import static name.remal.gradle_plugins.toolkit.ObjectUtils.doNotInline;
 import static name.remal.gradle_plugins.toolkit.ObjectUtils.unwrapProviders;
 
 import java.util.LinkedHashMap;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -53,9 +52,9 @@ public abstract class BuildTimeConstantsPlugin implements Plugin<Project> {
         var allProperties = extension.getProperties();
 
         var properties = objects.mapProperty(String.class, String.class);
-        properties.set(getProviders().provider(() -> {
+        properties.value(getProviders().provider(() -> {
             var result = new LinkedHashMap<String, String>();
-            allProperties.get().forEach((@Nullable Object key, @Nullable Object value) -> {
+            allProperties.get().forEach((Object key, Object value) -> {
                 key = unwrapProviders(key);
                 value = unwrapProviders(value);
                 if (key == null || value == null) {
@@ -65,8 +64,7 @@ public abstract class BuildTimeConstantsPlugin implements Plugin<Project> {
                 result.put(key.toString(), value.toString());
             });
             return result;
-        }));
-        properties.finalizeValueOnRead();
+        })).finalizeValueOnRead();
 
         var processingAction = objects.newInstance(ClassFileProcessorAction.class);
         processingAction.getProperties().set(properties);

@@ -1,11 +1,11 @@
 package name.remal.gradle_plugins.build_time_constants;
 
 import java.util.Map;
-import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import org.gradle.api.Action;
 import org.gradle.api.provider.MapProperty;
+import org.jspecify.annotations.Nullable;
 
 @Getter
 @Setter
