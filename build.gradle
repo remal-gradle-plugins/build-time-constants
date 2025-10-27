@@ -70,6 +70,9 @@ Provider<String> apiGroup = project.ext['apiGroup'] = provider { apiPublication.
 Provider<String> apiArtifactId = project.ext['apiArtifactId'] = provider { apiPublication.get().artifactId }
 Provider<String> apiVersion = project.ext['apiVersion'] = provider { apiPublication.get().version }
 
+project.ext['apiNotation'] = provider { "${apiGroup.get()}:${apiArtifactId.get()}:${apiVersion.get()}" }
+project.ext['apiNotationWithoutVersion'] = provider { "${apiGroup.get()}:${apiArtifactId.get()}" }
+
 buildTimeConstants {
     properties([
         'api.groupId': apiGroup,
