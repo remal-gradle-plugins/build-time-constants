@@ -85,6 +85,7 @@ class ClassFileProcessor {
     private final Path sourcePath;
     private final Path targetPath;
     private final Map<String, String> properties;
+    private final ClassLoader classLoader;
 
     private boolean changed;
 
@@ -119,7 +120,12 @@ class ClassFileProcessor {
 
 
         if (changed) {
-            var classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
+            var classWriter = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES) {
+                @Override
+                protected ClassLoader getClassLoader() {
+                    return classLoader;
+                }
+            };
             ClassVisitor classVisitor = classWriter;
             if (IN_TEST) {
                 classVisitor = wrapWithTestClassVisitors(classVisitor);

@@ -48,7 +48,7 @@ abstract class ClassFileProcessorTestUtils {
             var bytecodeUrl = requireNonNull(clazz.getResource(bytecodePath));
             var sourcePath = Paths.get(bytecodeUrl.toURI());
             var targetPath = fileSystem.getPath(bytecodePath);
-            new ClassFileProcessor(sourcePath, targetPath, properties).process();
+            new ClassFileProcessor(sourcePath, targetPath, properties, classLoader).process();
 
             if (!exists(targetPath)) {
                 throw new ClassNotChangedException();
