@@ -16,7 +16,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static String getClassName(@NotNull @CompileTimeConstant Class<?> clazz) {
+    public static String getClassName(@NotNull Class<?> clazz) {
         throw illegalMethodUseException();
     }
 
@@ -27,7 +27,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static String getClassSimpleName(@NotNull @CompileTimeConstant Class<?> clazz) {
+    public static String getClassSimpleName(@NotNull Class<?> clazz) {
         throw illegalMethodUseException();
     }
 
@@ -38,7 +38,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static String getClassPackageName(@NotNull @CompileTimeConstant Class<?> clazz) {
+    public static String getClassPackageName(@NotNull Class<?> clazz) {
         throw illegalMethodUseException();
     }
 
@@ -49,7 +49,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static String getClassInternalName(@NotNull @CompileTimeConstant Class<?> clazz) {
+    public static String getClassInternalName(@NotNull Class<?> clazz) {
         throw illegalMethodUseException();
     }
 
@@ -60,7 +60,7 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static String getClassDescriptor(@NotNull @CompileTimeConstant Class<?> clazz) {
+    public static String getClassDescriptor(@NotNull Class<?> clazz) {
         throw illegalMethodUseException();
     }
 
