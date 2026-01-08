@@ -118,7 +118,9 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static Map<@NotNull String, @NotNull String> getStringProperties(@NotNull @CompileTimeConstant String propertyNamePattern) {
+    public static Map<@NotNull String, @NotNull String> getStringProperties(
+        @NotNull @CompileTimeConstant String propertyNamePattern
+    ) {
         throw illegalMethodUseException();
     }
 
@@ -133,7 +135,9 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static Map<@NotNull String, @NotNull Integer> getIntegerProperties(@NotNull @CompileTimeConstant String propertyNamePattern) {
+    public static Map<@NotNull String, @NotNull Integer> getIntegerProperties(
+        @NotNull @CompileTimeConstant String propertyNamePattern
+    ) {
         throw illegalMethodUseException();
     }
 
@@ -148,7 +152,9 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static Map<@NotNull String, @NotNull Long> getLongProperties(@NotNull @CompileTimeConstant String propertyNamePattern) {
+    public static Map<@NotNull String, @NotNull Long> getLongProperties(
+        @NotNull @CompileTimeConstant String propertyNamePattern
+    ) {
         throw illegalMethodUseException();
     }
 
@@ -163,7 +169,9 @@ public abstract class BuildTimeConstants {
      */
     @NotNull
     @Contract(pure = true)
-    public static Map<@NotNull String, @NotNull Boolean> getBooleanProperties(@NotNull @CompileTimeConstant String propertyNamePattern) {
+    public static Map<@NotNull String, @NotNull Boolean> getBooleanProperties(
+        @NotNull @CompileTimeConstant String propertyNamePattern
+    ) {
         throw illegalMethodUseException();
     }
 
