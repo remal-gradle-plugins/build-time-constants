@@ -90,7 +90,7 @@ class ClassFileProcessor {
     private boolean changed;
 
     @SneakyThrows
-    @SuppressWarnings("java:S3776")
+    @SuppressWarnings({"java:S3776", "ReferenceEquality"})
     public void process() {
         var classNode = new ClassNode();
         ClassReader classReader;
