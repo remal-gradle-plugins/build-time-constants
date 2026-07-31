@@ -7,20 +7,20 @@ import static name.remal.gradle_plugins.toolkit.ObjectUtils.unwrapProviders;
 
 import java.util.LinkedHashMap;
 import javax.inject.Inject;
+import name.remal.gradle_plugins.toolkit.AbstractSettingsAwarePlugin;
 import name.remal.gradle_plugins.toolkit.JvmLanguageCompilationUtils;
-import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ExternalModuleDependency;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ProviderFactory;
 import org.gradle.api.tasks.SourceSetContainer;
 
-public abstract class BuildTimeConstantsPlugin implements Plugin<Project> {
+public abstract class BuildTimeConstantsPlugin extends AbstractSettingsAwarePlugin {
 
     public static final String BUILD_TIME_CONSTANTS_EXTENSION_NAME = doNotInline("buildTimeConstants");
 
     @Override
-    public void apply(Project project) {
+    protected void applyToProject(Project project) {
         project.getExtensions().create(BUILD_TIME_CONSTANTS_EXTENSION_NAME, BuildTimeConstantsExtension.class);
 
         project.getPluginManager().withPlugin("java", __ -> {
