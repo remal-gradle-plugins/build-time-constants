@@ -1,6 +1,6 @@
 **Tested on Java LTS versions from <!--property:java-runtime.min-version-->11<!--/property--> to <!--property:java-runtime.max-version-->27<!--/property-->.**
 
-**Tested on Gradle versions from <!--property:gradle-api.min-version-->7.0<!--/property--> to <!--property:gradle-api.max-version-->9.8.1<!--/property-->.**
+**Tested on Gradle versions from <!--property:gradle-api.min-version-->7.0<!--/property--> to <!--property:gradle-api.max-version-->9.8.2<!--/property-->.**
 
 # `name.remal.build-time-constants` plugin
 
@@ -11,7 +11,7 @@ Usage:
 <!--plugin-usage:name.remal.build-time-constants-->
 ```groovy
 plugins {
-    id 'name.remal.build-time-constants' version '2.1.2'
+    id 'name.remal.build-time-constants' version '2.1.3'
 }
 ```
 <!--/plugin-usage-->
